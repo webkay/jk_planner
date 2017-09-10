@@ -7,9 +7,43 @@ import ReactDOM from 'react-dom'
 
 function Hello() {
   return (
-    <div>
-      <h1>Hello from React</h1>
-      <p>I am 'Hello' stateless function component</p>
+    <div className="scoreboard">
+      <div className="header">
+        <h1>Scoreboard</h1>
+      </div>
+
+      <div>
+        <div className="player">
+          <div className="player-name">Jimmy Johns</div>
+          <div className="player-score">
+            <div className="counter">
+              <button className="counter-action decrement"> - </button>
+              <div className="counter-score"> 42 </div>
+              <button className="counter-action increment"> + </button>
+            </div>
+          </div>
+        </div>
+        <div className="player">
+          <div className="player-name">Jackie Robinson</div>
+          <div className="player-score">
+            <div className="counter">
+              <button className="counter-action decrement"> - </button>
+              <div className="counter-score"> 42 </div>
+              <button className="counter-action increment"> + </button>
+            </div>
+          </div>
+        </div>
+        <div className="player">
+          <div className="player-name">Ed Kesson</div>
+          <div className="player-score">
+            <div className="counter">
+              <button className="counter-action decrement"> - </button>
+              <div className="counter-score"> 32 </div>
+              <button className="counter-action increment"> + </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
