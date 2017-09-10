@@ -4,23 +4,19 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
 
-const Hello = props => (
-  <div>Hello {props.name}!</div>
-)
-
-Hello.defaultProps = {
-  name: 'David'
-}
-
-Hello.propTypes = {
-  name: PropTypes.string
+function Hello() {
+  return (
+    <div>
+      <h1>Hello from React</h1>
+      <p>I am 'Hello' stateless function component</p>
+    </div>
+  );
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Hello name="React" />,
+    <Hello />,
     document.body.appendChild(document.createElement('div')),
   )
 })
