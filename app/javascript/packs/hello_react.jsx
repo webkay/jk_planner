@@ -4,12 +4,13 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 
-function Hello() {
+function Hello(props) {
   return (
     <div className="scoreboard">
       <div className="header">
-        <h1>Scoreboard</h1>
+        <h1>{props.title}</h1>
       </div>
 
       <div>
@@ -46,6 +47,14 @@ function Hello() {
       </div>
     </div>
   );
+}
+
+Hello.defaultProps = {
+  title: 'Scoreboard'
+}
+
+Hello.propTypes = {
+  title: PropTypes.string
 }
 
 document.addEventListener('DOMContentLoaded', () => {
