@@ -6,44 +6,56 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
+function Header(props) {
+  return (
+    <div className="header">
+      <h1>{props.title}</h1>
+    </div>
+  );
+}
+
+Header.propTypes = {
+  title: PropTypes.string.isRequired
+}
+
+function Counter(props) {
+  return (
+    <div className="counter">
+      <button className="counter-action decrement"> - </button>
+      <div className="counter-score"> {props.score} </div>
+      <button className="counter-action increment"> + </button>
+    </div>
+  );
+}
+
+Counter.propTypes = {
+  score: PropTypes.number.isRequired
+}
+
+function Player(props) {
+  return (
+    <div className="player">
+      <div className="player-name">{props.name}</div>
+      <div className="player-score">
+        <Counter score={props.score} />
+      </div>
+    </div>
+  );
+}
+
+Player.propTypes = {
+  name: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired
+}
+
 function Hello(props) {
   return (
     <div className="scoreboard">
-      <div className="header">
-        <h1>{props.title}</h1>
-      </div>
-
+      <Header title={props.title} />
       <div>
-        <div className="player">
-          <div className="player-name">Jimmy Johns</div>
-          <div className="player-score">
-            <div className="counter">
-              <button className="counter-action decrement"> - </button>
-              <div className="counter-score"> 42 </div>
-              <button className="counter-action increment"> + </button>
-            </div>
-          </div>
-        </div>
-        <div className="player">
-          <div className="player-name">Jackie Robinson</div>
-          <div className="player-score">
-            <div className="counter">
-              <button className="counter-action decrement"> - </button>
-              <div className="counter-score"> 42 </div>
-              <button className="counter-action increment"> + </button>
-            </div>
-          </div>
-        </div>
-        <div className="player">
-          <div className="player-name">Ed Kesson</div>
-          <div className="player-score">
-            <div className="counter">
-              <button className="counter-action decrement"> - </button>
-              <div className="counter-score"> 32 </div>
-              <button className="counter-action increment"> + </button>
-            </div>
-          </div>
-        </div>
+        <Player name="Jimmy Johns" score={31} />
+        <Player name="Jackie Robinson" score={33} />
+        <Player name="Ed Kesson" score={42} />
       </div>
     </div>
   );
