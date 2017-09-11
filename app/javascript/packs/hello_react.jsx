@@ -53,9 +53,9 @@ function Hello(props) {
     <div className="scoreboard">
       <Header title={props.title} />
       <div>
-        <Player name="Jimmy Johns" score={31} />
-        <Player name="Jackie Robinson" score={33} />
-        <Player name="Ed Kesson" score={42} />
+        {props.players.map(function (player) {
+          return <Player name={player.name} score={player.score} key={player.id} />
+        })}
       </div>
     </div>
   );
@@ -69,9 +69,15 @@ Hello.propTypes = {
   title: PropTypes.string
 }
 
+var PLAYERS = [
+  {name: "Jimmy Johns", score: 31, id: 1},
+  {name: "Jackie Robinson", score: 33, id: 2},
+  {name: "Ed Kesson", score: 42, id: 3}
+];
+
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Hello />,
+    <Hello players={PLAYERS} />,
     document.body.appendChild(document.createElement('div')),
   )
 })
