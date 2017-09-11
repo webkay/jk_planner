@@ -19,42 +19,26 @@ Header.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-var Counter = createReactClass({
-  propTypes: {
-    initialScore: PropTypes.number.isRequired
-  },
-  getInitialState: function() {
-    return {
-      score: this.props.initialScore
-    }
-  },
-  incrementScore: function(e) {
-    this.setState({
-      score: this.state.score + 1
-    });
-  },
-  decrementScore: function(e) {
-    this.setState({
-      score: this.state.score - 1
-    });
-  },
-  render: function() {
-    return (
-      <div className="counter">
-        <button className="counter-action decrement" onClick={this.decrementScore}> - </button>
-        <div className="counter-score"> {this.state.score} </div>
-        <button className="counter-action increment" onClick={this.incrementScore}> + </button>
-      </div>
-    );
-  }
-});
+function Counter (props) {
+  return (
+    <div className="counter">
+      <button className="counter-action decrement"> - </button>
+      <div className="counter-score"> {props.score} </div>
+      <button className="counter-action increment"> + </button>
+    </div>
+  );
+}
+
+Counter.propTypes = {
+  score: PropTypes.number.isRequired
+}
 
 function Player(props) {
   return (
     <div className="player">
       <div className="player-name">{props.name}</div>
       <div className="player-score">
-        <Counter initialScore={props.score} />
+        <Counter score={props.score} />
       </div>
     </div>
   );
@@ -65,26 +49,33 @@ Player.propTypes = {
   score: PropTypes.number.isRequired
 }
 
-function Hello(props) {
-  return (
-    <div className="scoreboard">
-      <Header title={props.title} />
-      <div>
-        {props.players.map(function (player) {
-          return <Player name={player.name} score={player.score} key={player.id} />
-        })}
+var Hello = createReactClass({
+  propTypes: {
+    title: PropTypes.string
+  },
+  getDefaultProps: function() {
+    return {
+      title: 'Scoreboard'
+    };
+  },
+  getInitialState: function() {
+    return {
+      players: this.props.initialPlayers
+    };
+  },
+  render: function() {
+    return (
+      <div className="scoreboard">
+        <Header title={this.props.title} />
+        <div>
+          {this.state.players.map(function (player) {
+            return <Player name={player.name} score={player.score} key={player.id} />
+          })}
+        </div>
       </div>
-    </div>
-  );
-}
-
-Hello.defaultProps = {
-  title: 'Scoreboard'
-}
-
-Hello.propTypes = {
-  title: PropTypes.string
-}
+    );
+  }
+})
 
 var PLAYERS = [
   {name: "Jimmy Johns", score: 31, id: 1},
@@ -94,7 +85,7 @@ var PLAYERS = [
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Hello players={PLAYERS} />,
+    <Hello initialPlayers={PLAYERS} />,
     document.body.appendChild(document.createElement('div')),
   )
 })
