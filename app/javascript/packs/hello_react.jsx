@@ -105,7 +105,7 @@ function Player(props) {
   return (
     <div className="player">
       <div className="player-name">
-        <a className="remove-player">✖︎</a>
+        <a className="remove-player" onClick={props.onRemove}>✖︎</a>
         {props.name}
       </div>
       <div className="player-score">
@@ -118,7 +118,8 @@ function Player(props) {
 Player.propTypes = {
   name: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
-  onScoreChange: PropTypes.func.isRequired
+  onScoreChange: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired
 }
 
 var Hello = createReactClass({
@@ -150,14 +151,19 @@ var Hello = createReactClass({
     this.setState(this.state);
     nextId += 1;
   },
+  onRemovePlayer: function(index) {
+    this.state.players.splice(index, 1);
+    this.setState(this.state);
+  },
   render: function() {
     return (
       <div className="scoreboard">
         <Header title={this.props.title} players={this.state.players} />
         <div>
           {this.state.players.map(function (player, index) {
-            return <Player name={player.name} score={player.score} key={player.id}
-              onScoreChange={function(delta) { this.onScoreChange(index, delta)}.bind(this)} />
+            return (<Player name={player.name} score={player.score} key={player.id}
+              onScoreChange={function(delta) { this.onScoreChange(index, delta)}.bind(this)}
+              onRemove={function() {this.onRemovePlayer(index)}.bind(this)} />);
           }.bind(this))}
         </div>
         <AddPlayerForm onAdd={this.onPlayerAdd} />
