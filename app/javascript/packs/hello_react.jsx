@@ -7,6 +7,19 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import createReactClass from 'create-react-class'
 
+var AddPlayerForm = createReactClass({
+  render: function () {
+    return (
+      <div className="add-player-form">
+        <form>
+          <input type="text" />
+          <input type="submit" value="Add Player" />
+        </form>
+      </div>
+    );
+  }
+});
+
 function Stats(props) {
   var totalPlayers = props.players.length;
   var totalPoints = props.players.reduce(function(total, player) {
@@ -109,6 +122,7 @@ var Hello = createReactClass({
               onScoreChange={function(delta) { this.onScoreChange(index, delta)}.bind(this)} />
           }.bind(this))}
         </div>
+        <AddPlayerForm />
       </div>
     );
   }
