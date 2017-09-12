@@ -104,7 +104,10 @@ Counter.propTypes = {
 function Player(props) {
   return (
     <div className="player">
-      <div className="player-name">{props.name}</div>
+      <div className="player-name">
+        <a className="remove-player">✖︎</a>
+        {props.name}
+      </div>
       <div className="player-score">
         <Counter score={props.score} onChange={props.onScoreChange} />
       </div>
