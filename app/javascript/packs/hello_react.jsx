@@ -7,12 +7,37 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 import createReactClass from 'create-react-class'
 
+var PLAYERS = [
+  {name: "Jimmy Johns", score: 31, id: 1},
+  {name: "Jackie Robinson", score: 33, id: 2},
+  {name: "Ed Kesson", score: 42, id: 3}
+];
+var nextId = 4;
+
 var AddPlayerForm = createReactClass({
+  propTypes: {
+    onAdd: PropTypes.func.isRequired
+  },
+  getInitialState: function() {
+    return {
+      name: "",
+    }
+  },
+  onNameChange: function(e) {
+    // console.log('onNameChange', e.target.value);
+    this.setState({name: e.target.value});
+  },
+  onSubmit: function(e) {
+    e.preventDefault();
+
+    this.props.onAdd(this.state.name);
+    this.setState({name: ""})
+  },
   render: function () {
     return (
       <div className="add-player-form">
-        <form>
-          <input type="text" />
+        <form onSubmit={this.onSubmit}>
+          <input type="text" value={this.state.name} onChange={this.onNameChange} />
           <input type="submit" value="Add Player" />
         </form>
       </div>
@@ -112,6 +137,16 @@ var Hello = createReactClass({
     this.state.players[index].score += delta;
     this.setState(this.state);
   },
+  onPlayerAdd: function(name) {
+    // console.log('onPlayerAdd', name);
+    this.state.players.push({
+      name: name,
+      score: 0,
+      id: nextId,
+    })
+    this.setState(this.state);
+    nextId += 1;
+  },
   render: function() {
     return (
       <div className="scoreboard">
@@ -122,17 +157,11 @@ var Hello = createReactClass({
               onScoreChange={function(delta) { this.onScoreChange(index, delta)}.bind(this)} />
           }.bind(this))}
         </div>
-        <AddPlayerForm />
+        <AddPlayerForm onAdd={this.onPlayerAdd} />
       </div>
     );
   }
 })
-
-var PLAYERS = [
-  {name: "Jimmy Johns", score: 31, id: 1},
-  {name: "Jackie Robinson", score: 33, id: 2},
-  {name: "Ed Kesson", score: 42, id: 3}
-];
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
