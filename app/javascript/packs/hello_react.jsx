@@ -183,6 +183,23 @@ var Hello = createReactClass({
       players: this.props.initialPlayers
     };
   },
+  componentDidMount: function() {
+    var request = new Request('http://localhost:3001/players', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    });
+    fetch(request).then(function(response){
+      return response.json();
+    }).then(function(players){
+      this.setState({
+        players: players
+      });
+    }.bind(this)).catch(function(error){
+      console.error(error);
+    });
+  },
   onScoreChange: function(index, delta) {
     // console.log('onScoreChange', index, delta);
     this.state.players[index].score += delta;
