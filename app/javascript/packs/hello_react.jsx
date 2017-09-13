@@ -6,26 +6,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
-const GuestList = props => {
-    return (
-        <ul>
-          {props.guests.map((guest, index) =>
-            <Guest name={guest.name} isConfirmed={guest.isConfirmed} key={index} handleConfirmation={() => props.toggleConfirmationAt(index)} />
-          )}
-        </ul>
-    );
-  }
-
-GuestList.propTypes = {
-  guests: PropTypes.array.isRequired,
-  toggleConfirmationAt: PropTypes.func.isRequired
-}
-
 const Guest = props => {
     return (
           <li className="responded"><span>{props.name}</span>
             <label>
-              <input type="checkbox" checked={props.isConfirmed} onChange={props.handleConfirmation} /> Confirmed
+              <input
+                type="checkbox"
+                checked={props.isConfirmed}
+                onChange={props.handleConfirmation} /> Confirmed
             </label>
             <button>edit</button>
             <button>remove</button>
@@ -37,6 +25,25 @@ Guest.propTypes = {
   name: PropTypes.string.isRequired,
   isConfirmed: PropTypes.bool.isRequired,
   handleConfirmation: PropTypes.func.isRequired
+}
+
+const GuestList = props => {
+    return (
+        <ul>
+          {props.guests.map((guest, index) =>
+            <Guest
+              key={index}
+              name={guest.name}
+              isConfirmed={guest.isConfirmed}
+              handleConfirmation={() => props.toggleConfirmationAt(index)} />
+          )}
+        </ul>
+    );
+  }
+
+GuestList.propTypes = {
+  guests: PropTypes.array.isRequired,
+  toggleConfirmationAt: PropTypes.func.isRequired
 }
 
 class Hello extends React.Component {
@@ -54,7 +61,7 @@ class Hello extends React.Component {
       guests: this.state.guests.map((guest, index) => {
         if (index === indexToChange) {
           return {
-            name: guest.name,
+            ...guest,
             isConfirmed: !guest.isConfirmed
           }
         }
@@ -101,10 +108,11 @@ class Hello extends React.Component {
             </tr>
           </tbody>
         </table>
-        <GuestList guests={this.state.guests} toggleConfirmationAt={this.toggleConfirmationAt} />
+        <GuestList
+          guests={this.state.guests}
+          toggleConfirmationAt={this.toggleConfirmationAt} />
       </div>
     </div>
-
     );
   }
 }
