@@ -6,7 +6,41 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
+const GuestList = props => {
+    return (
+        <ul>
+          {props.guests.map((guest, index) =>
+
+          <li className="responded"><span>{guest.name}</span>
+            <label>
+              <input type="checkbox" checked={guest.isConfirmed} /> Confirmed
+            </label>
+            <button>edit</button>
+            <button>remove</button>
+          </li>
+          )}
+        </ul>
+      );
+    }
+
+GuestList.propTypes = {
+  guests: PropTypes.array.isRequired
+}
+
 class Hello extends React.Component {
+
+  state = {
+    guests: [
+      {name: 'Iver', isConfirmed: false},
+      {name: 'Corrina', isConfirmed: true},
+      {name: 'Joel', isConfirmed: true}
+    ]
+  }
+
+  getTotalInvited = () => this.state.guests.length;
+  // getAttendingGuests = () =>
+  // getUnconfirmedGuests = () =>
+
   render() {
     return (
     <div className="App">
@@ -41,32 +75,7 @@ class Hello extends React.Component {
             </tr>
           </tbody>
         </table>
-        <ul>
-          <li className="pending"><span>Safia</span></li>
-          <li className="responded"><span>Iver</span>
-            <label>
-              <input type="checkbox" checked /> Confirmed
-            </label>
-            <button>edit</button>
-            <button>remove</button>
-          </li>
-          <li className="responded">
-            <span>Corrina</span>
-            <label>
-              <input type="checkbox" checked /> Confirmed
-            </label>
-            <button>edit</button>
-            <button>remove</button>
-          </li>
-          <li>
-            <span>Joel</span>
-            <label>
-              <input type="checkbox" /> Confirmed
-            </label>
-            <button>edit</button>
-            <button>remove</button>
-          </li>
-        </ul>
+        <GuestList guests={this.state.guests} />
       </div>
     </div>
 
