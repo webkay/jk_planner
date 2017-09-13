@@ -10,21 +10,31 @@ const GuestList = props => {
     return (
         <ul>
           {props.guests.map((guest, index) =>
+            <Guest name={guest.name} isConfirmed={guest.isConfirmed} key={index} />
+          )}
+        </ul>
+    );
+  }
 
-          <li className="responded"><span>{guest.name}</span>
+GuestList.propTypes = {
+  guests: PropTypes.array.isRequired
+}
+
+const Guest = props => {
+    return (
+          <li className="responded"><span>{props.name}</span>
             <label>
-              <input type="checkbox" checked={guest.isConfirmed} /> Confirmed
+              <input type="checkbox" checked={props.isConfirmed} /> Confirmed
             </label>
             <button>edit</button>
             <button>remove</button>
           </li>
-          )}
-        </ul>
-      );
-    }
+    );
+  }
 
-GuestList.propTypes = {
-  guests: PropTypes.array.isRequired
+Guest.propTypes = {
+  name: PropTypes.string.isRequired,
+  isConfirmed: PropTypes.bool.isRequired
 }
 
 class Hello extends React.Component {
