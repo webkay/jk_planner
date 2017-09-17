@@ -1,21 +1,31 @@
-// Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
-// like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
-// of the page.
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
+const GuestName = props => {
+  if (props.isEditing) {
+    return (
+      <input type="text" value={props.children} />
+    );
+  }
+  return <span>{props.children}</span>;
+}
+
+GuestName.propTypes = {
+  isEditing: PropTypes.bool.isRequired
+}
+
 const Guest = props => {
     return (
-          <li className="responded"><span>{props.name}</span>
+          <li className="responded">
+            <GuestName isEditing={props.isEditing}>{props.name}</GuestName>
             <label>
               <input
                 type="checkbox"
                 checked={props.isConfirmed}
                 onChange={props.handleConfirmation} /> Confirmed
             </label>
-            <button>edit</button>
+            <button onClick={props.handleToggleEditing}>edit</button>
             <button>remove</button>
           </li>
     );
@@ -24,7 +34,9 @@ const Guest = props => {
 Guest.propTypes = {
   name: PropTypes.string.isRequired,
   isConfirmed: PropTypes.bool.isRequired,
-  handleConfirmation: PropTypes.func.isRequired
+  isEditing: PropTypes.bool.isRequired,
+  handleConfirmation: PropTypes.func.isRequired,
+  handleToggleEditing: PropTypes.func.isRequired
 }
 
 const GuestList = props => {
@@ -35,7 +47,9 @@ const GuestList = props => {
               key={index}
               name={guest.name}
               isConfirmed={guest.isConfirmed}
-              handleConfirmation={() => props.toggleConfirmationAt(index)} />
+              isEditing={guest.isEditing}
+              handleConfirmation={() => props.toggleConfirmationAt(index)}
+              handleToggleEditing={() => props.toggleEditingAt(index)} />
           )}
         </ul>
     );
@@ -43,31 +57,40 @@ const GuestList = props => {
 
 GuestList.propTypes = {
   guests: PropTypes.array.isRequired,
-  toggleConfirmationAt: PropTypes.func.isRequired
+  toggleConfirmationAt: PropTypes.func.isRequired,
+  toggleEditingAt: PropTypes.func.isRequired
 }
 
 class Hello extends React.Component {
 
   state = {
     guests: [
-      {name: 'Iver', isConfirmed: false},
-      {name: 'Corrina', isConfirmed: true},
-      {name: 'Joel', isConfirmed: true}
+      {name: 'Iver', isConfirmed: false, isEditing: false},
+      {name: 'Corrina', isConfirmed: true, isEditing: false},
+      {name: 'Joel', isConfirmed: true, isEditing: true}
     ]
   }
 
-  toggleConfirmationAt = indexToChange => {
+  toggleGuestPropertyAt = (property, indexToChange) => {
     this.setState({
       guests: this.state.guests.map((guest, index) => {
         if (index === indexToChange) {
           return {
             ...guest,
-            isConfirmed: !guest.isConfirmed
+            [property]: !guest[property]
           }
         }
         return guest;
       })
     });
+  }
+
+  toggleConfirmationAt = indexToChange => {
+    this.toggleGuestPropertyAt('isConfirmed', indexToChange)
+  }
+
+  toggleEditingAt = indexToChange => {
+    this.toggleGuestPropertyAt('isEditing', indexToChange)
   }
 
   getTotalInvited = () => this.state.guests.length;
@@ -110,7 +133,8 @@ class Hello extends React.Component {
         </table>
         <GuestList
           guests={this.state.guests}
-          toggleConfirmationAt={this.toggleConfirmationAt} />
+          toggleConfirmationAt={this.toggleConfirmationAt}
+          toggleEditingAt={this.toggleEditingAt} />
       </div>
     </div>
     );
