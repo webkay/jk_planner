@@ -29,7 +29,7 @@ const Guest = props => {
             <button onClick={props.handleToggleEditing}>
               {props.isEditing ? 'save' : 'edit'}
             </button>
-            <button>remove</button>
+            <button onClick={props.handleRemove}>remove</button>
           </li>
     );
   }
@@ -40,7 +40,8 @@ Guest.propTypes = {
   isEditing: PropTypes.bool.isRequired,
   handleConfirmation: PropTypes.func.isRequired,
   handleToggleEditing: PropTypes.func.isRequired,
-  setName: PropTypes.func.isRequired
+  setName: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired
 }
 
 const GuestList = props => {
@@ -56,7 +57,8 @@ const GuestList = props => {
               isEditing={guest.isEditing}
               handleConfirmation={() => props.toggleConfirmationAt(index)}
               handleToggleEditing={() => props.toggleEditingAt(index)}
-              setName={text => props.setNameAt(text, index)} />
+              setName={text => props.setNameAt(text, index)}
+              handleRemove={() => props.removeGuestAt(index)} />
           )}
         </ul>
     );
@@ -67,7 +69,8 @@ GuestList.propTypes = {
   toggleConfirmationAt: PropTypes.func.isRequired,
   toggleEditingAt: PropTypes.func.isRequired,
   setNameAt: PropTypes.func.isRequired,
-  isFiltered: PropTypes.bool.isRequired
+  isFiltered: PropTypes.bool.isRequired,
+  removeGuestAt: PropTypes.func.isRequired
 }
 
 class Hello extends React.Component {
@@ -98,6 +101,15 @@ class Hello extends React.Component {
 
   toggleConfirmationAt = indexToChange => {
     this.toggleGuestPropertyAt('isConfirmed', indexToChange)
+  }
+
+  removeGuestAt = index => {
+    this.setState({
+      guests: [
+        ...this.state.guests.slice(0, index),
+        ...this.state.guests.slice(index + 1)
+      ]
+    })
   }
 
   toggleEditingAt = indexToChange => {
@@ -188,6 +200,7 @@ class Hello extends React.Component {
           toggleConfirmationAt={this.toggleConfirmationAt}
           toggleEditingAt={this.toggleEditingAt}
           setNameAt={this.setNameAt}
+          removeGuestAt={this.removeGuestAt}
           isFiltered={this.state.isFiltered} />
       </div>
     </div>
