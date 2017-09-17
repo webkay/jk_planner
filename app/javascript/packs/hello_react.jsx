@@ -2,93 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
-const GuestName = props => {
-  if (props.isEditing) {
-    return (
-      <input type="text" value={props.children} onChange={props.handleNameEdits} />
-    );
-  }
-  return <span>{props.children}</span>;
-}
-
-GuestName.propTypes = {
-  isEditing: PropTypes.bool.isRequired,
-  handleNameEdits: PropTypes.func.isRequired
-}
-
-const Guest = props => {
-    return (
-          <li className="responded">
-            <GuestName isEditing={props.isEditing} handleNameEdits={e => props.setName(e.target.value)}>{props.name}</GuestName>
-            <label>
-              <input
-                type="checkbox"
-                checked={props.isConfirmed}
-                onChange={props.handleConfirmation} /> Confirmed
-            </label>
-            <button onClick={props.handleToggleEditing}>
-              {props.isEditing ? 'save' : 'edit'}
-            </button>
-            <button onClick={props.handleRemove}>remove</button>
-          </li>
-    );
-  }
-
-Guest.propTypes = {
-  name: PropTypes.string.isRequired,
-  isConfirmed: PropTypes.bool.isRequired,
-  isEditing: PropTypes.bool.isRequired,
-  handleConfirmation: PropTypes.func.isRequired,
-  handleToggleEditing: PropTypes.func.isRequired,
-  setName: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired
-}
-
-const PendingGuest = props => {
-  if (props.name) {
-    return (
-      <li className="pending">
-        <span>{props.name}</span>
-      </li>
-    );
-  }
-  return null;
-}
-
-PendingGuest.propTypes = {
-  name: PropTypes.string.isRequired
-}
-
-const GuestList = props => {
-    return (
-        <ul>
-          <PendingGuest name={props.pendingGuest} />
-          {props.guests
-            .filter((guest) => { return (!props.isFiltered || guest.isConfirmed) })
-            .map((guest, index) =>
-            <Guest
-              key={index}
-              name={guest.name}
-              isConfirmed={guest.isConfirmed}
-              isEditing={guest.isEditing}
-              handleConfirmation={() => props.toggleConfirmationAt(index)}
-              handleToggleEditing={() => props.toggleEditingAt(index)}
-              setName={text => props.setNameAt(text, index)}
-              handleRemove={() => props.removeGuestAt(index)} />
-          )}
-        </ul>
-    );
-  }
-
-GuestList.propTypes = {
-  guests: PropTypes.array.isRequired,
-  toggleConfirmationAt: PropTypes.func.isRequired,
-  toggleEditingAt: PropTypes.func.isRequired,
-  setNameAt: PropTypes.func.isRequired,
-  isFiltered: PropTypes.bool.isRequired,
-  removeGuestAt: PropTypes.func.isRequired,
-  pendingGuest: PropTypes.string.isRequired
-}
+import GuestList from './guest-list'
+import Counter from './counter'
 
 class Hello extends React.Component {
 
@@ -175,43 +90,44 @@ class Hello extends React.Component {
   }
 
   getTotalInvited = () => this.state.guests.length;
-  // getAttendingGuests = () =>
-  // getUnconfirmedGuests = () =>
+  getAttendingGuests = () => {
+    return this.state.guests.reduce((total, guest) => {
+      return guest.isConfirmed ? total + 1 : total
+    }, 0);
+  }
 
   render() {
+    const totalInvited = this.getTotalInvited();
+    const numberAttending = this.getAttendingGuests();
+    const numberUnconfirmed = totalInvited - numberAttending;
     return (
     <div className="App">
       <header>
         <h1>RSVP</h1>
         <p>A Treehouse App</p>
         <form onSubmit={this.newGuestSubmitHandler}>
-            <input type="text" onChange={this.handleNameInput} value={this.state.pendingGuest} placeholder="Invite Someone" />
-            <button type="submit" name="submit" value="submit">Submit</button>
+          <input
+            type="text"
+            onChange={this.handleNameInput}
+            value={this.state.pendingGuest}
+            placeholder="Invite Someone" />
+          <button type="submit" name="submit" value="submit">Submit</button>
         </form>
       </header>
       <div className="main">
         <div>
           <h2>Invitees</h2>
           <label>
-            <input type="checkbox" onChange={this.toggleFilter} checked={this.state.isFiltered} /> Hide those who haven't responded
+            <input
+              type="checkbox"
+              onChange={this.toggleFilter}
+              checked={this.state.isFiltered} /> Hide those who haven't responded
           </label>
         </div>
-        <table className="counter">
-          <tbody>
-            <tr>
-              <td>Attending:</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td>Unconfirmed:</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td>Total:</td>
-              <td>3</td>
-            </tr>
-          </tbody>
-        </table>
+        <Counter
+          numberAttending={numberAttending}
+          numberUnconfirmed={numberUnconfirmed}
+          totalInvited={totalInvited} />
         <GuestList
           guests={this.state.guests}
           toggleConfirmationAt={this.toggleConfirmationAt}
