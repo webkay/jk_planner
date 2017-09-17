@@ -44,9 +44,25 @@ Guest.propTypes = {
   handleRemove: PropTypes.func.isRequired
 }
 
+const PendingGuest = props => {
+  if (props.name) {
+    return (
+      <li className="pending">
+        <span>{props.name}</span>
+      </li>
+    );
+  }
+  return null;
+}
+
+PendingGuest.propTypes = {
+  name: PropTypes.string.isRequired
+}
+
 const GuestList = props => {
     return (
         <ul>
+          <PendingGuest name={props.pendingGuest} />
           {props.guests
             .filter((guest) => { return (!props.isFiltered || guest.isConfirmed) })
             .map((guest, index) =>
@@ -70,7 +86,8 @@ GuestList.propTypes = {
   toggleEditingAt: PropTypes.func.isRequired,
   setNameAt: PropTypes.func.isRequired,
   isFiltered: PropTypes.bool.isRequired,
-  removeGuestAt: PropTypes.func.isRequired
+  removeGuestAt: PropTypes.func.isRequired,
+  pendingGuest: PropTypes.string.isRequired
 }
 
 class Hello extends React.Component {
@@ -201,7 +218,8 @@ class Hello extends React.Component {
           toggleEditingAt={this.toggleEditingAt}
           setNameAt={this.setNameAt}
           removeGuestAt={this.removeGuestAt}
-          isFiltered={this.state.isFiltered} />
+          isFiltered={this.state.isFiltered}
+          pendingGuest={this.state.pendingGuest} />
       </div>
     </div>
     );
