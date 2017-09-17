@@ -46,7 +46,9 @@ Guest.propTypes = {
 const GuestList = props => {
     return (
         <ul>
-          {props.guests.map((guest, index) =>
+          {props.guests
+            .filter((guest) => { return (!props.isFiltered || guest.isConfirmed) })
+            .map((guest, index) =>
             <Guest
               key={index}
               name={guest.name}
@@ -64,12 +66,14 @@ GuestList.propTypes = {
   guests: PropTypes.array.isRequired,
   toggleConfirmationAt: PropTypes.func.isRequired,
   toggleEditingAt: PropTypes.func.isRequired,
-  setNameAt: PropTypes.func.isRequired
+  setNameAt: PropTypes.func.isRequired,
+  isFiltered: PropTypes.bool.isRequired
 }
 
 class Hello extends React.Component {
 
   state = {
+    isFiltered: false,
     guests: [
       {name: 'Iver', isConfirmed: false, isEditing: false},
       {name: 'Corrina', isConfirmed: true, isEditing: false},
@@ -113,6 +117,12 @@ class Hello extends React.Component {
     })
   }
 
+  toggleFilter = () => {
+    this.setState({
+      isFiltered: !this.state.isFiltered
+    })
+  }
+
   getTotalInvited = () => this.state.guests.length;
   // getAttendingGuests = () =>
   // getUnconfirmedGuests = () =>
@@ -132,7 +142,7 @@ class Hello extends React.Component {
         <div>
           <h2>Invitees</h2>
           <label>
-            <input type="checkbox" /> Hide those who haven't responded
+            <input type="checkbox" onChange={this.toggleFilter} checked={this.state.isFiltered} /> Hide those who haven't responded
           </label>
         </div>
         <table className="counter">
@@ -155,7 +165,8 @@ class Hello extends React.Component {
           guests={this.state.guests}
           toggleConfirmationAt={this.toggleConfirmationAt}
           toggleEditingAt={this.toggleEditingAt}
-          setNameAt={this.setNameAt} />
+          setNameAt={this.setNameAt}
+          isFiltered={this.state.isFiltered} />
       </div>
     </div>
     );
