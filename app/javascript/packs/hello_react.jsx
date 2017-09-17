@@ -74,6 +74,7 @@ class Hello extends React.Component {
 
   state = {
     isFiltered: false,
+    pendingGuest: "",
     guests: [
       {name: 'Iver', isConfirmed: false, isEditing: false},
       {name: 'Corrina', isConfirmed: true, isEditing: false},
@@ -123,6 +124,27 @@ class Hello extends React.Component {
     })
   }
 
+  handleNameInput = e => {
+    this.setState({
+      pendingGuest: e.target.value
+    });
+  }
+
+  newGuestSubmitHandler = e => {
+    e.preventDefault();
+    this.setState({
+      guests: [
+        {
+          name: this.state.pendingGuest,
+          isConfirmed: false,
+          isEditing: false
+        },
+        ...this.state.guests
+      ],
+      pendingGuest: ""
+    })
+  }
+
   getTotalInvited = () => this.state.guests.length;
   // getAttendingGuests = () =>
   // getUnconfirmedGuests = () =>
@@ -133,8 +155,8 @@ class Hello extends React.Component {
       <header>
         <h1>RSVP</h1>
         <p>A Treehouse App</p>
-        <form>
-            <input type="text" value="Safia" placeholder="Invite Someone" />
+        <form onSubmit={this.newGuestSubmitHandler}>
+            <input type="text" onChange={this.handleNameInput} value={this.state.pendingGuest} placeholder="Invite Someone" />
             <button type="submit" name="submit" value="submit">Submit</button>
         </form>
       </header>
