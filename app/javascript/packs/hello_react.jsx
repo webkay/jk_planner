@@ -9,17 +9,21 @@ class Hello extends React.Component {
   state = {
     isFiltered: false,
     pendingGuest: "",
-    guests: [
-      {name: 'Iver', isConfirmed: false, isEditing: false},
-      {name: 'Corrina', isConfirmed: true, isEditing: false},
-      {name: 'Joel', isConfirmed: true, isEditing: true}
-    ]
+    guests: []
   }
 
-  toggleGuestPropertyAt = (property, indexToChange) => {
+  lastGuestId = 0
+
+  newGuestId = () => {
+    const id = this.lastGuestId;
+    this.lastGuestId += 1;
+    return id;
+  }
+
+  toggleGuestProperty = (property, id) => {
     this.setState({
-      guests: this.state.guests.map((guest, index) => {
-        if (index === indexToChange) {
+      guests: this.state.guests.map((guest) => {
+        if (id === guest.id) {
           return {
             ...guest,
             [property]: !guest[property]
@@ -30,27 +34,24 @@ class Hello extends React.Component {
     });
   }
 
-  toggleConfirmationAt = indexToChange => {
-    this.toggleGuestPropertyAt('isConfirmed', indexToChange)
+  toggleConfirmation = id => {
+    this.toggleGuestProperty('isConfirmed', id)
   }
 
-  removeGuestAt = index => {
+  removeGuest = id => {
     this.setState({
-      guests: [
-        ...this.state.guests.slice(0, index),
-        ...this.state.guests.slice(index + 1)
-      ]
+      guests: this.state.guests.filter((guest) => { return id !== guest.id })
     })
   }
 
-  toggleEditingAt = indexToChange => {
-    this.toggleGuestPropertyAt('isEditing', indexToChange)
+  toggleEditing = id => {
+    this.toggleGuestProperty('isEditing', id)
   }
 
-  setNameAt = (name, indexToChange) => {
+  setName = (name, id) => {
     this.setState({
-      guests: this.state.guests.map((guest, index) => {
-        if (index == indexToChange) {
+      guests: this.state.guests.map((guest) => {
+        if (id == guest.id) {
           return {
             ...guest,
             name
@@ -75,12 +76,14 @@ class Hello extends React.Component {
 
   newGuestSubmitHandler = e => {
     e.preventDefault();
+    const id = this.newGuestId();
     this.setState({
       guests: [
         {
           name: this.state.pendingGuest,
           isConfirmed: false,
-          isEditing: false
+          isEditing: false,
+          id
         },
         ...this.state.guests
       ],
@@ -114,10 +117,10 @@ class Hello extends React.Component {
         numberAttending={numberAttending}
         numberUnconfirmed={numberUnconfirmed}
         guests={this.state.guests}
-        toggleConfirmationAt={this.toggleConfirmationAt}
-        toggleEditingAt={this.toggleEditingAt}
-        setNameAt={this.setNameAt}
-        removeGuestAt={this.removeGuestAt}
+        toggleConfirmation={this.toggleConfirmation}
+        toggleEditing={this.toggleEditing}
+        setName={this.setName}
+        removeGuest={this.removeGuest}
         pendingGuest={this.state.pendingGuest}
       />
     </div>
