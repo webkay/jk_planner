@@ -8,11 +8,8 @@ import PropTypes from 'prop-types'
 import createReactClass from 'create-react-class'
 
 var PLAYERS = [
-  {name: "Jimmy Johns", score: 31, id: 1},
-  {name: "Jackie Robinson", score: 33, id: 2},
-  {name: "Ed Kesson", score: 42, id: 3}
 ];
-var nextId = 4;
+var nextId = 0;
 
 var Stopwatch = createReactClass({
   getInitialState: function() {
@@ -169,7 +166,7 @@ Player.propTypes = {
   onRemove: PropTypes.func.isRequired
 }
 
-var Scoreboard = createReactClass({
+var Hello = createReactClass({
   propTypes: {
     title: PropTypes.string
   },
@@ -184,7 +181,7 @@ var Scoreboard = createReactClass({
     };
   },
   componentDidMount: function() {
-    var request = new Request('http://localhost:3001', {
+    var request = new Request('http://localhost:3001/players', {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json'
@@ -214,10 +211,32 @@ var Scoreboard = createReactClass({
     })
     this.setState(this.state);
     nextId += 1;
+    var request = new Request('http://localhost:3001/players', {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      body: JSON.stringify({
+        player_name: name,
+        player_id: nextId,
+      })
+    });
+    fetch(request).then(function(response){
+      return response
+    });
   },
   onRemovePlayer: function(index) {
     this.state.players.splice(index, 1);
     this.setState(this.state);
+    var request = new Request("http://localhost:3001/players/" + this.state.players[index].id, {
+      method: 'DELETE',
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    });
+    fetch(request).then(function(response){
+      return response
+    });
   },
   render: function() {
     return (
@@ -238,7 +257,7 @@ var Scoreboard = createReactClass({
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Scoreboard initialPlayers={PLAYERS} />,
+    <Hello initialPlayers={PLAYERS} />,
     document.body.appendChild(document.createElement('div')),
   )
 })
