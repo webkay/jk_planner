@@ -222,12 +222,10 @@ var Hello = createReactClass({
       })
     });
     fetch(request).then(function(response){
-      return response
+      return response.status
     });
   },
   onRemovePlayer: function(index) {
-    this.state.players.splice(index, 1);
-    this.setState(this.state);
     var request = new Request("http://localhost:3001/players/" + this.state.players[index].id, {
       method: 'DELETE',
       headers: new Headers({
@@ -235,8 +233,10 @@ var Hello = createReactClass({
       })
     });
     fetch(request).then(function(response){
-      return response
+      return response.status
     });
+    this.state.players.splice(index, 1);
+    this.setState(this.state);
   },
   render: function() {
     return (
